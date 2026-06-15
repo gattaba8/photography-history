@@ -1,26 +1,299 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* ── Tailwind v4 theme tokens ────────────────────────────────────────── */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  /* Warm / sepia palette */
+  --color-warm-50: #fdf8f0;
+  --color-warm-100: #f5ebe0;
+  --color-warm-200: #e6d5c3;
+  --color-warm-300: #d4b896;
+  --color-warm-400: #c19a6b;
+  --color-warm-500: #a67c52;
+  --color-warm-600: #8b6340;
+  --color-warm-700: #6f4e34;
+  --color-warm-800: #4a3423;
+  --color-warm-900: #2c1f15;
+  --color-warm-950: #0d0b09;
+
+  /* Accent gold / amber */
+  --color-accent: #d4a853;
+  --color-accent-light: #e8c674;
+  --color-accent-dark: #b08a3a;
+  --color-accent-muted: rgba(212, 168, 83, 0.15);
+
+  /* Surface */
+  --color-surface: #141210;
+  --color-surface-elevated: #1c1917;
+
+  /* Font families */
+  --font-heading: "Playfair Display", serif;
+  --font-body: "Inter", sans-serif;
+
+  /* Custom spacing */
+  --spacing-18: 4.5rem;
+  --spacing-88: 22rem;
+  --spacing-112: 28rem;
+  --spacing-128: 32rem;
+
+  /* Animations */
+  --animate-fadeIn: fadeIn 0.6s ease-out forwards;
+  --animate-slideUp: slideUp 0.7s ease-out forwards;
+  --animate-slideInLeft: slideInLeft 0.7s ease-out forwards;
+  --animate-slideInRight: slideInRight 0.7s ease-out forwards;
+  --animate-glow: glow 3s ease-in-out infinite;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── CSS custom properties (non-Tailwind) ────────────────────────────── */
+:root {
+  --background: #0a0a0a;
+  --foreground: #e8e0d4;
+  --surface: #141210;
+  --surface-elevated: #1c1917;
+
+  --accent: #d4a853;
+  --accent-light: #e8c674;
+  --accent-dark: #b08a3a;
+  --accent-muted: rgba(212, 168, 83, 0.15);
+
+  --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Global resets & base styles ─────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ── Grain / texture overlay ─────────────────────────────────────────── */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* ── Custom scrollbar ────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #6f4e34;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #8b6340;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #6f4e34 var(--background);
+}
+
+/* ── Typography ──────────────────────────────────────────────────────── */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  color: #f5ebe0;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+p {
+  color: #d4b896;
+}
+
+/* ── Selection ───────────────────────────────────────────────────────── */
+::selection {
+  background-color: var(--accent-muted);
+  color: var(--accent-light);
+}
+
+/* ── Links ───────────────────────────────────────────────────────────── */
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color var(--transition-base);
+}
+
+a:hover {
+  color: var(--accent-light);
+}
+
+/* ── Timeline ────────────────────────────────────────────────────────── */
+.timeline-line {
+  position: relative;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #6f4e34 10%,
+    #8b6340 50%,
+    #6f4e34 90%,
+    transparent 100%
+  );
+}
+
+.timeline-dot {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--accent);
+  border: 3px solid var(--background);
+  box-shadow:
+    0 0 0 2px var(--accent-dark),
+    0 0 12px var(--accent-muted);
+  animation: timeline-glow 3s ease-in-out infinite;
+}
+
+.timeline-dot::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent-muted) 0%, transparent 70%);
+  animation: timeline-glow 3s ease-in-out infinite;
+}
+
+@keyframes timeline-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 2px var(--accent-dark),
+      0 0 12px var(--accent-muted);
+    opacity: 0.8;
+  }
+  50% {
+    box-shadow:
+      0 0 0 3px var(--accent),
+      0 0 24px var(--accent-muted),
+      0 0 48px rgba(212, 168, 83, 0.08);
+    opacity: 1;
+  }
+}
+
+/* ── Utility: museum card hover ──────────────────────────────────────── */
+.museum-card {
+  background-color: var(--surface-elevated);
+  border: 1px solid rgba(212, 168, 83, 0.08);
+  transition:
+    border-color var(--transition-base),
+    box-shadow var(--transition-base),
+    transform var(--transition-base);
+}
+
+.museum-card:hover {
+  border-color: rgba(212, 168, 83, 0.2);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(212, 168, 83, 0.1);
+  transform: translateY(-2px);
+}
+
+/* ── Utility: section divider ────────────────────────────────────────── */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    #6f4e34 20%,
+    var(--accent-dark) 50%,
+    #6f4e34 80%,
+    transparent
+  );
+}
+
+/* ── Image treatment ─────────────────────────────────────────────────── */
+.museum-image {
+  filter: saturate(0.85) contrast(1.05);
+  transition: filter var(--transition-slow);
+}
+
+.museum-image:hover {
+  filter: saturate(1) contrast(1);
+}
+
+/* ── Keyframes for Tailwind animation utilities ──────────────────────── */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    text-shadow: 0 0 8px var(--accent-muted);
+  }
+  50% {
+    text-shadow:
+      0 0 16px var(--accent-muted),
+      0 0 32px rgba(212, 168, 83, 0.06);
+  }
 }
