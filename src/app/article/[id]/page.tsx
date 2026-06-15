@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation'
 import Navigation from '@/components/Navigation'
 import ArticleContent from '@/components/ArticleContent'
-import Footer from '@/components/Footer'
 import { timelineEvents } from '@/data/timeline'
 
 export function generateStaticParams() {
@@ -10,15 +9,14 @@ export function generateStaticParams() {
   }))
 }
 
-export function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
-  return params.then(({ id }) => {
-    const event = timelineEvents.find((e) => e.id === id)
-    if (!event) return { title: 'Article non trouvé' }
-    return {
-      title: `${event.title} (${event.year}) | Histoire de la Photographie`,
-      description: event.summary,
-    }
-  })
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const event = timelineEvents.find((e) => e.id === id)
+  if (!event) return { title: 'Article non trouvé' }
+  return {
+    title: `${event.title} (${event.year}) — Musée de la Photographie`,
+    description: event.summary,
+  }
 }
 
 export default async function ArticlePage({
@@ -38,14 +36,14 @@ export default async function ArticlePage({
       : null
 
   return (
-    <main className="bg-warm-950 min-h-screen">
+    <main className="min-h-screen bg-white">
       <Navigation />
       <ArticleContent
         event={event}
         prevEvent={prevEvent}
         nextEvent={nextEvent}
+        index={eventIndex}
       />
-      <Footer />
     </main>
   )
 }

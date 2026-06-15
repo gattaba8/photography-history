@@ -1,144 +1,126 @@
-'use client'
-
+import Link from 'next/link'
 import Navigation from '@/components/Navigation'
-import Footer from '@/components/Footer'
-import { motion } from 'framer-motion'
-import { Camera, BookOpen, Globe, Heart } from 'lucide-react'
 
 export default function AboutPage() {
   return (
-    <main className="bg-warm-950 min-h-screen">
+    <main className="min-h-screen bg-white">
       <Navigation />
 
-      <section className="pt-32 pb-16 px-6">
-        <div className="max-w-3xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <span className="text-amber-600 tracking-[0.3em] uppercase text-xs">
-              À propos
-            </span>
-            <h1 className="font-heading text-4xl md:text-6xl text-warm-100 mt-3 mb-6">
-              Notre Mission
-            </h1>
-            <p className="text-warm-400 text-lg leading-relaxed">
-              Ce musée virtuel est dédié à la préservation et à la diffusion de
-              l&apos;histoire de la photographie, l&apos;une des inventions les
-              plus transformatrices de l&apos;histoire humaine.
+      <div className="pt-14">
+        <div className="max-w-[700px] mx-auto px-6 py-20">
+          <h1 className="text-[32px] md:text-[42px] font-[family-name:var(--font-heading)] font-normal tracking-tight mb-10">
+            À Propos
+          </h1>
+
+          <div className="space-y-6 text-[14px] text-[#555] leading-[1.8]">
+            <p>
+              Ce musée virtuel est dédié à l&apos;exploration de l&apos;histoire
+              de la photographie, l&apos;une des inventions les plus
+              transformatrices de l&apos;histoire humaine.
             </p>
-          </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16"
-          >
-            <div className="p-8 rounded-lg bg-warm-900/30 border border-warm-800/20">
-              <Camera className="w-8 h-8 text-amber-500 mb-4" />
-              <h3 className="font-heading text-xl text-warm-100 mb-3">
-                Patrimoine Photographique
-              </h3>
-              <p className="text-warm-400 text-sm leading-relaxed">
-                Nous retraçons l&apos;évolution complète de la photographie,
-                des premières expériences de Niépce aux technologies
-                d&apos;intelligence artificielle contemporaines.
-              </p>
-            </div>
-
-            <div className="p-8 rounded-lg bg-warm-900/30 border border-warm-800/20">
-              <BookOpen className="w-8 h-8 text-amber-500 mb-4" />
-              <h3 className="font-heading text-xl text-warm-100 mb-3">
-                Contenu Éducatif
-              </h3>
-              <p className="text-warm-400 text-sm leading-relaxed">
-                Chaque article est rédigé avec soin pour offrir un contenu
-                historiquement précis et accessible, enrichi d&apos;images
-                d&apos;illustration évocatrices.
-              </p>
-            </div>
-
-            <div className="p-8 rounded-lg bg-warm-900/30 border border-warm-800/20">
-              <Globe className="w-8 h-8 text-amber-500 mb-4" />
-              <h3 className="font-heading text-xl text-warm-100 mb-3">
-                Accessible à Tous
-              </h3>
-              <p className="text-warm-400 text-sm leading-relaxed">
-                Ce musée virtuel est gratuit et ouvert à tous. Notre ambition
-                est de rendre l&apos;histoire de la photographie accessible au
-                plus grand nombre.
-              </p>
-            </div>
-
-            <div className="p-8 rounded-lg bg-warm-900/30 border border-warm-800/20">
-              <Heart className="w-8 h-8 text-amber-500 mb-4" />
-              <h3 className="font-heading text-xl text-warm-100 mb-3">
-                Passion & Précision
-              </h3>
-              <p className="text-warm-400 text-sm leading-relaxed">
-                Ce projet est né de la passion pour la photographie et de la
-                volonté de partager cette histoire fascinante avec le monde
-                entier.
-              </p>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="prose-custom"
-          >
-            <h2 className="font-heading text-2xl text-warm-100 mb-6">
-              L&apos;Histoire en Lumière
-            </h2>
-
-            <p className="text-warm-400 leading-relaxed mb-6">
-              La photographie est bien plus qu&apos;une simple technique de
-              capture d&apos;images. Elle est le témoin silencieux de notre
-              histoire collective, le miroir de nos sociétés et le vecteur
-              d&apos;émotions universelles. Depuis les premiers essais de
-              Nicéphore Niépce dans sa propriété de Saint-Loup-de-Varennes
+            <p>
+              Depuis les premières expériences de Nicéphore Niépce en 1826
               jusqu&apos;aux algorithmes de photographie computationnelle de nos
               smartphones, chaque avancée a redéfini notre façon de voir et de
-              comprendre le monde.
+              comprendre le monde. La photographie est bien plus qu&apos;une
+              technique de capture d&apos;images — elle est le témoin silencieux
+              de notre histoire collective.
             </p>
 
-            <p className="text-warm-400 leading-relaxed mb-6">
-              Ce musée virtuel s&apos;efforce de raconter cette histoire dans
-              toute sa richesse. À travers une chronologie interactive, des
-              articles détaillés et une riche iconographie, nous invitons le
-              visiteur à découvrir les inventeurs, les artistes et les
-              innovateurs qui ont fait de la photographie ce qu&apos;elle est
-              aujourd&apos;hui.
+            <p>
+              À travers une chronologie interactive et des articles détaillés,
+              nous invitons le visiteur à découvrir les inventeurs, les artistes
+              et les innovateurs qui ont fait de la photographie ce qu&apos;elle
+              est aujourd&apos;hui.
             </p>
 
-            <p className="text-warm-400 leading-relaxed mb-6">
+            <p>
               Des daguerréotypes précieux aux fichiers numériques partagés
               instantanément sur les réseaux sociaux, la photographie a parcouru
-              un chemin extraordinaire. Chaque époque a apporté ses révolutions :
-              le collodion humide a démocratisé le portrait, le film souple a
-              libéré le photographe, le numérique a aboli les frontières entre
-              amateur et professionnel, et le smartphone a fait de chaque être
-              humain un photographe en puissance.
+              un chemin extraordinaire. Chaque époque a apporté ses
+              révolutions : le collodion humide a démocratisé le portrait, le
+              film souple a libéré le photographe, le numérique a aboli les
+              frontières entre amateur et professionnel, et le smartphone a fait
+              de chaque être humain un photographe en puissance.
             </p>
+          </div>
 
-            <p className="text-warm-400 leading-relaxed">
-              Nous espérons que cette exploration vous inspirera autant
-              qu&apos;elle nous inspire, et qu&apos;elle vous donnera envie de
-              regarder vos propres photographies — et celles des autres — avec
-              un regard nouveau.
-            </p>
-          </motion.div>
+          <div className="mt-16 pt-10 border-t border-[#e5e5e5]">
+            <h2 className="text-[18px] font-medium mb-6">Les époques</h2>
+            <div className="grid grid-cols-1 gap-4">
+              {[
+                { name: 'Les Pionniers', years: '1826–1860', id: 'pionniers' },
+                {
+                  name: "L'Âge du Collodion",
+                  years: '1851–1880',
+                  id: 'collodion',
+                },
+                {
+                  name: 'La Démocratisation',
+                  years: '1880–1920',
+                  id: 'democratisation',
+                },
+                { name: "L'Âge d'Or", years: '1920–1960', id: 'age-dor' },
+                {
+                  name: 'La Révolution SLR',
+                  years: '1960–1990',
+                  id: 'revolution-slr',
+                },
+                {
+                  name: "L'Ère Numérique",
+                  years: '1990–2010',
+                  id: 'numerique',
+                },
+                {
+                  name: "L'Ère du Smartphone",
+                  years: '2010–2026',
+                  id: 'smartphone',
+                },
+              ].map((era) => (
+                <Link
+                  key={era.id}
+                  href={`/timeline#${era.id}`}
+                  className="flex justify-between items-center py-3 border-b border-[#f0f0f0] group"
+                >
+                  <span className="text-[14px] text-[#1a1a1a] group-hover:text-[#666] transition-colors">
+                    {era.name}
+                  </span>
+                  <span className="text-[12px] text-[#bbb]">{era.years}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
-      </section>
 
-      <Footer />
+        <footer className="border-t border-[#e5e5e5] py-8">
+          <div className="max-w-[1400px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-[12px] text-[#999]">
+              Musée de la Photographie — 1826 à aujourd&apos;hui
+            </p>
+            <div className="flex gap-6">
+              <Link
+                href="/"
+                className="text-[12px] text-[#999] hover:text-[#1a1a1a]"
+              >
+                Introduction
+              </Link>
+              <Link
+                href="/timeline"
+                className="text-[12px] text-[#999] hover:text-[#1a1a1a]"
+              >
+                Chronologie
+              </Link>
+              <Link
+                href="/articles"
+                className="text-[12px] text-[#999] hover:text-[#1a1a1a]"
+              >
+                Collection
+              </Link>
+            </div>
+          </div>
+        </footer>
+      </div>
     </main>
   )
 }

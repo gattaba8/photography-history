@@ -1,58 +1,52 @@
 'use client'
 
 import { useState } from 'react'
-import Navigation from '@/components/Navigation'
-import Footer from '@/components/Footer'
-import { timelineEvents, eras } from '@/data/timeline'
-import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Calendar, Tag } from 'lucide-react'
-
-const categoryLabels: Record<string, string> = {
-  invention: 'Invention',
-  technique: 'Technique',
-  camera: 'Appareil',
-  movement: 'Mouvement',
-  digital: 'Numérique',
-  milestone: 'Jalon',
-}
+import Navigation from '@/components/Navigation'
+import { timelineEvents, eras } from '@/data/timeline'
 
 export default function ArticlesPage() {
   const [selectedEra, setSelectedEra] = useState<string | null>(null)
+  const [showFilters, setShowFilters] = useState(false)
 
   const filtered = selectedEra
     ? timelineEvents.filter((e) => e.era === selectedEra)
     : timelineEvents
 
   return (
-    <main className="bg-warm-950 min-h-screen">
+    <main className="min-h-screen bg-white">
       <Navigation />
 
-      <section className="pt-32 pb-12 px-6 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <span className="text-amber-600 tracking-[0.3em] uppercase text-xs">
-            Tous les articles
-          </span>
-          <h1 className="font-heading text-4xl md:text-6xl text-warm-100 mt-3 mb-4">
-            Articles
+      <div className="pt-14">
+        <div className="max-w-[1400px] mx-auto px-6 pt-10 pb-6 flex items-center justify-between">
+          <h1 className="text-[15px] font-medium">
+            Collection ({filtered.length} articles)
           </h1>
-          <p className="text-warm-400 max-w-xl mx-auto mb-8">
-            Plongez dans l&apos;histoire complète de la photographie à travers
-            nos articles détaillés.
-          </p>
+          <div className="flex items-center gap-6">
+            <Link
+              href="/timeline"
+              className="text-[13px] text-[#999] hover:text-[#1a1a1a] transition-colors"
+            >
+              Chronologie
+            </Link>
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="text-[13px] text-[#999] hover:text-[#1a1a1a] transition-colors"
+            >
+              {showFilters ? 'Masquer les filtres' : 'Filtrer par époque'}
+            </button>
+          </div>
+        </div>
 
-          <div className="flex flex-wrap justify-center gap-2">
+        {showFilters && (
+          <div className="max-w-[1400px] mx-auto px-6 pb-6 flex flex-wrap gap-2">
             <button
               onClick={() => setSelectedEra(null)}
-              className={`px-4 py-2 rounded-full text-xs tracking-wider uppercase transition-all duration-300 ${
+              className={`px-3 py-1.5 text-[12px] border transition-colors ${
                 !selectedEra
-                  ? 'bg-amber-600 text-warm-950'
-                  : 'bg-warm-900/50 text-warm-400 hover:bg-warm-800/50'
+                  ? 'bg-[#1a1a1a] text-white border-[#1a1a1a]'
+                  : 'bg-white text-[#666] border-[#e5e5e5] hover:border-[#999]'
               }`}
             >
               Toutes les époques
@@ -61,65 +55,76 @@ export default function ArticlesPage() {
               <button
                 key={era.id}
                 onClick={() => setSelectedEra(era.name)}
-                className={`px-4 py-2 rounded-full text-xs tracking-wider uppercase transition-all duration-300 ${
+                className={`px-3 py-1.5 text-[12px] border transition-colors ${
                   selectedEra === era.name
-                    ? 'bg-amber-600 text-warm-950'
-                    : 'bg-warm-900/50 text-warm-400 hover:bg-warm-800/50'
+                    ? 'bg-[#1a1a1a] text-white border-[#1a1a1a]'
+                    : 'bg-white text-[#666] border-[#e5e5e5] hover:border-[#999]'
                 }`}
               >
                 {era.name}
               </button>
             ))}
           </div>
-        </motion.div>
-      </section>
+        )}
 
-      <section className="max-w-7xl mx-auto px-6 pb-24">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filtered.map((event, i) => (
-            <motion.div
-              key={event.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: (i % 6) * 0.05 }}
-            >
-              <Link href={`/article/${event.id}`} className="group block">
-                <div className="relative overflow-hidden rounded-lg aspect-[16/10] mb-4">
+        <div className="border-t border-[#e5e5e5]" />
+
+        <div className="max-w-[1400px] mx-auto px-6 py-10">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-5 gap-y-10">
+            {filtered.map((event, i) => (
+              <Link
+                key={event.id}
+                href={`/article/${event.id}`}
+                className="group"
+              >
+                <div className="relative aspect-square overflow-hidden bg-[#f5f5f5] mb-3">
                   <Image
                     src={event.image}
                     alt={event.title}
                     fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover group-hover:opacity-85 transition-opacity duration-300"
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-warm-950/70 via-transparent to-transparent" />
                 </div>
-
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="flex items-center gap-1 text-amber-500 text-xs">
-                    <Calendar className="w-3 h-3" />
-                    {event.year}
-                  </span>
-                  <span className="flex items-center gap-1 text-warm-500 text-xs">
-                    <Tag className="w-3 h-3" />
-                    {categoryLabels[event.category]}
-                  </span>
-                </div>
-
-                <h3 className="font-heading text-lg text-warm-100 group-hover:text-amber-500 transition-colors mb-2">
+                <p className="text-[11px] text-[#bbb] tabular-nums mb-0.5">
+                  {String(i + 1).padStart(3, '0')} — {event.year}
+                </p>
+                <p className="text-[13px] text-[#1a1a1a] leading-snug group-hover:text-[#666] transition-colors">
                   {event.title}
-                </h3>
-                <p className="text-warm-500 text-sm line-clamp-2">
-                  {event.summary}
                 </p>
               </Link>
-            </motion.div>
-          ))}
+            ))}
+          </div>
         </div>
-      </section>
 
-      <Footer />
+        <footer className="border-t border-[#e5e5e5] py-8">
+          <div className="max-w-[1400px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-[12px] text-[#999]">
+              Musée de la Photographie — 1826 à aujourd&apos;hui
+            </p>
+            <div className="flex gap-6">
+              <Link
+                href="/"
+                className="text-[12px] text-[#999] hover:text-[#1a1a1a]"
+              >
+                Introduction
+              </Link>
+              <Link
+                href="/timeline"
+                className="text-[12px] text-[#999] hover:text-[#1a1a1a]"
+              >
+                Chronologie
+              </Link>
+              <Link
+                href="/about"
+                className="text-[12px] text-[#999] hover:text-[#1a1a1a]"
+              >
+                À Propos
+              </Link>
+            </div>
+          </div>
+        </footer>
+      </div>
     </main>
   )
 }

@@ -1,37 +1,27 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
-import ScrollToTop from "@/components/ScrollToTop";
 import "./globals.css";
 
 const playfairDisplay = Playfair_Display({
   variable: "--font-heading",
   subsets: ["latin"],
   display: "swap",
-  weight: ["400", "500", "600", "700", "800", "900"],
+  weight: ["400", "500", "600", "700"],
 });
 
 const inter = Inter({
   variable: "--font-body",
   subsets: ["latin"],
   display: "swap",
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600"],
 });
 
 export const metadata: Metadata = {
-  title: "Histoire de la Photographie | Musée Virtuel",
+  title: "Musée de la Photographie",
   description:
-    "Explorez l'histoire fascinante de la photographie, des premières expériences de Niépce aux révolutions numériques contemporaines. Un voyage visuel à travers deux siècles d'innovation et de création artistique.",
-  keywords: [
-    "photographie",
-    "histoire",
-    "musée virtuel",
-    "Niépce",
-    "Daguerre",
-    "art photographique",
-  ],
-  authors: [{ name: "Musée Virtuel de la Photographie" }],
+    "Explorez l'histoire de la photographie, des premières expériences de Niépce aux révolutions numériques contemporaines.",
   openGraph: {
-    title: "Histoire de la Photographie | Musée Virtuel",
+    title: "Musée de la Photographie",
     description:
       "Un voyage visuel à travers deux siècles d'innovation photographique.",
     type: "website",
@@ -45,13 +35,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="fr"
-      className={`${playfairDisplay.variable} ${inter.variable} h-full`}
-    >
-      <body className="min-h-full flex flex-col bg-[#0a0a0a] text-[#e8e0d4] antialiased">
+    <html lang="fr" className={`${playfairDisplay.variable} ${inter.variable}`}>
+      <body className="bg-white text-[#1a1a1a] antialiased">
         {children}
-        <ScrollToTop />
       </body>
     </html>
   );

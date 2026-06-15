@@ -1,9 +1,8 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowLeft, Calendar, Tag } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import type { TimelineEvent } from '@/data/timeline'
 
 const categoryLabels: Record<string, string> = {
@@ -19,121 +18,106 @@ export default function ArticleContent({
   event,
   prevEvent,
   nextEvent,
+  index,
 }: {
   event: TimelineEvent
   prevEvent: TimelineEvent | null
   nextEvent: TimelineEvent | null
+  index: number
 }) {
   const paragraphs = event.content.split('\n\n')
 
   return (
-    <article className="min-h-screen pt-20">
-      <div className="relative h-[60vh] md:h-[70vh] overflow-hidden">
-        <Image
-          src={event.image}
-          alt={event.title}
-          fill
-          className="object-cover"
-          priority
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-warm-950 via-warm-950/50 to-warm-950/30" />
-
-        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12">
-          <div className="max-w-3xl mx-auto">
-            <Link
-              href="/timeline"
-              className="inline-flex items-center gap-2 text-warm-400 hover:text-amber-500 transition-colors text-sm mb-6"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Retour à la chronologie
-            </Link>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <div className="flex items-center gap-4 mb-4">
-                <span className="flex items-center gap-1.5 text-amber-500 text-sm">
-                  <Calendar className="w-4 h-4" />
-                  {event.year}
-                  {event.endYear ? `–${event.endYear}` : ''}
-                </span>
-                <span className="flex items-center gap-1.5 text-warm-400 text-sm">
-                  <Tag className="w-4 h-4" />
-                  {categoryLabels[event.category]}
-                </span>
-                <span className="text-warm-500 text-sm">{event.era}</span>
-              </div>
-
-              <h1 className="font-heading text-3xl md:text-5xl lg:text-6xl text-warm-50 leading-tight">
-                {event.title}
-              </h1>
-            </motion.div>
-          </div>
-        </div>
+    <article className="min-h-screen pt-14">
+      <div className="max-w-[1400px] mx-auto px-6 pt-8 pb-4">
+        <Link
+          href="/timeline"
+          className="inline-flex items-center gap-1.5 text-[13px] text-[#999] hover:text-[#1a1a1a] transition-colors"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          Chronologie
+        </Link>
       </div>
 
-      <div className="max-w-3xl mx-auto px-6 py-12 md:py-16">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-        >
-          <p className="text-warm-300 text-lg md:text-xl leading-relaxed mb-8 font-medium">
+      <div className="max-w-[1400px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 pb-20">
+        <div className="relative aspect-square overflow-hidden bg-[#f5f5f5]">
+          <Image
+            src={event.image}
+            alt={event.title}
+            fill
+            className="object-cover"
+            priority
+            sizes="(max-width: 1024px) 100vw, 50vw"
+          />
+        </div>
+
+        <div className="lg:pt-4">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="text-[11px] text-[#bbb] tabular-nums">
+              {String(index + 1).padStart(3, '0')}
+            </span>
+            <span className="text-[11px] text-[#bbb]">—</span>
+            <span className="text-[11px] text-[#999]">
+              {categoryLabels[event.category]}
+            </span>
+          </div>
+
+          <h1 className="text-[28px] md:text-[36px] font-[family-name:var(--font-heading)] font-normal tracking-tight leading-tight mb-3">
+            {event.title}
+          </h1>
+
+          <p className="text-[14px] text-[#999] mb-6">
+            {event.year}
+            {event.endYear ? `–${event.endYear}` : ''} · {event.era}
+          </p>
+
+          <p className="text-[15px] text-[#444] leading-relaxed mb-8 font-medium">
             {event.summary}
           </p>
 
-          <div className="h-px bg-warm-800/50 mb-8" />
-
-          <div className="prose-custom">
+          <div className="border-t border-[#e5e5e5] pt-8">
             {paragraphs.map((paragraph, i) => (
               <p
                 key={i}
-                className="text-warm-400 leading-relaxed mb-6 text-base md:text-lg"
+                className="text-[14px] text-[#555] leading-[1.8] mb-5"
               >
                 {paragraph}
               </p>
             ))}
           </div>
-        </motion.div>
+        </div>
+      </div>
 
-        <div className="h-px bg-warm-800/50 my-12" />
-
-        <div className="flex flex-col sm:flex-row justify-between gap-4">
+      <div className="border-t border-[#e5e5e5]">
+        <div className="max-w-[1400px] mx-auto px-6 py-10 grid grid-cols-2 gap-6">
           {prevEvent ? (
             <Link
               href={`/article/${prevEvent.id}`}
-              className="group flex-1 p-4 rounded-lg border border-warm-800/30 hover:border-amber-600/50 transition-colors"
+              className="group"
             >
-              <span className="text-warm-500 text-xs tracking-wider uppercase">
-                ← Précédent
-              </span>
-              <p className="text-warm-200 group-hover:text-amber-500 transition-colors mt-1 font-heading">
+              <span className="text-[11px] text-[#bbb]">← Précédent</span>
+              <p className="text-[14px] text-[#1a1a1a] group-hover:text-[#666] transition-colors mt-1">
                 {prevEvent.title}
               </p>
-              <span className="text-warm-600 text-xs">{prevEvent.year}</span>
+              <span className="text-[11px] text-[#bbb]">{prevEvent.year}</span>
             </Link>
           ) : (
-            <div className="flex-1" />
+            <div />
           )}
 
           {nextEvent ? (
             <Link
               href={`/article/${nextEvent.id}`}
-              className="group flex-1 p-4 rounded-lg border border-warm-800/30 hover:border-amber-600/50 transition-colors text-right"
+              className="group text-right"
             >
-              <span className="text-warm-500 text-xs tracking-wider uppercase">
-                Suivant →
-              </span>
-              <p className="text-warm-200 group-hover:text-amber-500 transition-colors mt-1 font-heading">
+              <span className="text-[11px] text-[#bbb]">Suivant →</span>
+              <p className="text-[14px] text-[#1a1a1a] group-hover:text-[#666] transition-colors mt-1">
                 {nextEvent.title}
               </p>
-              <span className="text-warm-600 text-xs">{nextEvent.year}</span>
+              <span className="text-[11px] text-[#bbb]">{nextEvent.year}</span>
             </Link>
           ) : (
-            <div className="flex-1" />
+            <div />
           )}
         </div>
       </div>
