@@ -1,125 +1,99 @@
 import Link from 'next/link'
 import Navigation from '@/components/Navigation'
+import { eras } from '@/data/timeline'
 
 export default function AboutPage() {
   return (
     <main className="min-h-screen bg-white">
-      <Navigation />
+      <Navigation currentView={null} />
 
       <div className="pt-14">
-        <div className="max-w-[700px] mx-auto px-6 py-20">
-          <h1 className="text-[32px] md:text-[42px] font-[family-name:var(--font-heading)] font-normal tracking-tight mb-10">
-            À Propos
+        <div className="max-w-[700px] mx-auto px-6 py-16">
+          <h1
+            className="text-[32px] text-[#1a1a1a] mb-10"
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontWeight: 400,
+              lineHeight: 1.2,
+            }}
+          >
+            &Agrave; Propos
           </h1>
 
-          <div className="space-y-6 text-[14px] text-[#555] leading-[1.8]">
+          <div className="space-y-6 text-[15px] text-[#444] leading-relaxed mb-14">
             <p>
-              Ce musée virtuel est dédié à l&apos;exploration de l&apos;histoire
-              de la photographie, l&apos;une des inventions les plus
-              transformatrices de l&apos;histoire humaine.
+              Le Mus&eacute;e de la Photographie est un espace virtuel
+              d&eacute;di&eacute; &agrave; l&rsquo;histoire de l&rsquo;un des
+              m&eacute;diums les plus transformateurs de l&rsquo;humanit&eacute;.
+              De la premi&egrave;re h&eacute;liographie de Nic&eacute;phore
+              Ni&eacute;pce en 1826 aux images g&eacute;n&eacute;r&eacute;es
+              par intelligence artificielle, notre collection retrace deux
+              si&egrave;cles d&rsquo;innovation, de cr&eacute;ation et de
+              transformation du regard.
             </p>
-
             <p>
-              Depuis les premières expériences de Nicéphore Niépce en 1826
-              jusqu&apos;aux algorithmes de photographie computationnelle de nos
-              smartphones, chaque avancée a redéfini notre façon de voir et de
-              comprendre le monde. La photographie est bien plus qu&apos;une
-              technique de capture d&apos;images — elle est le témoin silencieux
-              de notre histoire collective.
+              Chaque &eacute;v&eacute;nement pr&eacute;sent&eacute; dans ce
+              mus&eacute;e a &eacute;t&eacute; choisi pour son impact
+              d&eacute;cisif sur l&rsquo;&eacute;volution du m&eacute;dium
+              photographique. Des inventions techniques qui ont rendu la
+              photographie possible, aux mouvements artistiques qui lui ont
+              donn&eacute; ses lettres de noblesse, en passant par les
+              appareils qui l&rsquo;ont d&eacute;mocratis&eacute;e &mdash;
+              chaque pi&egrave;ce raconte un chapitre essentiel de cette
+              histoire.
             </p>
-
             <p>
-              À travers une chronologie interactive et des articles détaillés,
-              nous invitons le visiteur à découvrir les inventeurs, les artistes
-              et les innovateurs qui ont fait de la photographie ce qu&apos;elle
-              est aujourd&apos;hui.
+              Notre ambition est de rendre cette histoire accessible &agrave;
+              tous, dans un cadre &eacute;pur&eacute; et contemplatif. Comme
+              dans un v&eacute;ritable mus&eacute;e, nous privil&eacute;gions
+              l&rsquo;espace, la lumi&egrave;re et le silence visuel pour
+              laisser les images et les r&eacute;cits s&rsquo;exprimer
+              pleinement.
             </p>
-
             <p>
-              Des daguerréotypes précieux aux fichiers numériques partagés
-              instantanément sur les réseaux sociaux, la photographie a parcouru
-              un chemin extraordinaire. Chaque époque a apporté ses
-              révolutions : le collodion humide a démocratisé le portrait, le
-              film souple a libéré le photographe, le numérique a aboli les
-              frontières entre amateur et professionnel, et le smartphone a fait
-              de chaque être humain un photographe en puissance.
+              Ce projet est con&ccedil;u comme une exp&eacute;rience de
+              d&eacute;couverte. Parcourez la chronologie pour suivre le fil du
+              temps, explorez la collection pour naviguer librement entre les
+              pi&egrave;ces, ou plongez dans un article pour approfondir un
+              moment cl&eacute; de l&rsquo;histoire photographique.
             </p>
           </div>
 
-          <div className="mt-16 pt-10 border-t border-[#e5e5e5]">
-            <h2 className="text-[18px] font-medium mb-6">Les époques</h2>
-            <div className="grid grid-cols-1 gap-4">
-              {[
-                { name: 'Les Pionniers', years: '1826–1860', id: 'pionniers' },
-                {
-                  name: "L'Âge du Collodion",
-                  years: '1851–1880',
-                  id: 'collodion',
-                },
-                {
-                  name: 'La Démocratisation',
-                  years: '1880–1920',
-                  id: 'democratisation',
-                },
-                { name: "L'Âge d'Or", years: '1920–1960', id: 'age-dor' },
-                {
-                  name: 'La Révolution SLR',
-                  years: '1960–1990',
-                  id: 'revolution-slr',
-                },
-                {
-                  name: "L'Ère Numérique",
-                  years: '1990–2010',
-                  id: 'numerique',
-                },
-                {
-                  name: "L'Ère du Smartphone",
-                  years: '2010–2026',
-                  id: 'smartphone',
-                },
-              ].map((era) => (
-                <Link
-                  key={era.id}
-                  href={`/timeline#${era.id}`}
-                  className="flex justify-between items-center py-3 border-b border-[#f0f0f0] group"
-                >
-                  <span className="text-[14px] text-[#1a1a1a] group-hover:text-[#666] transition-colors">
-                    {era.name}
-                  </span>
-                  <span className="text-[12px] text-[#bbb]">{era.years}</span>
-                </Link>
+          {/* Eras section */}
+          <div>
+            <h2
+              className="text-[11px] uppercase tracking-[0.15em] text-[#999] mb-6"
+              style={{ fontFamily: 'var(--font-body)', fontWeight: 400 }}
+            >
+              Les &eacute;poques
+            </h2>
+            <ul className="space-y-3">
+              {eras.map((era) => (
+                <li key={era.id}>
+                  <Link
+                    href={`/timeline#${era.id}`}
+                    className="group flex items-baseline gap-3"
+                  >
+                    <span className="text-[13px] tabular-nums text-[#999]">
+                      {era.startYear}&ndash;{era.endYear}
+                    </span>
+                    <span className="text-[15px] text-[#444] group-hover:text-[#1a1a1a] transition-colors">
+                      {era.name}
+                    </span>
+                  </Link>
+                </li>
               ))}
-            </div>
+            </ul>
+          </div>
+
+          {/* Minimal footer */}
+          <div className="mt-20 pt-8 border-t border-[#e5e5e5]">
+            <p className="text-[12px] text-[#999]">
+              Mus&eacute;e de la Photographie &mdash; 1826 &agrave;
+              aujourd&rsquo;hui
+            </p>
           </div>
         </div>
-
-        <footer className="border-t border-[#e5e5e5] py-8">
-          <div className="max-w-[1400px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-[12px] text-[#999]">
-              Musée de la Photographie — 1826 à aujourd&apos;hui
-            </p>
-            <div className="flex gap-6">
-              <Link
-                href="/"
-                className="text-[12px] text-[#999] hover:text-[#1a1a1a]"
-              >
-                Introduction
-              </Link>
-              <Link
-                href="/timeline"
-                className="text-[12px] text-[#999] hover:text-[#1a1a1a]"
-              >
-                Chronologie
-              </Link>
-              <Link
-                href="/articles"
-                className="text-[12px] text-[#999] hover:text-[#1a1a1a]"
-              >
-                Collection
-              </Link>
-            </div>
-          </div>
-        </footer>
       </div>
     </main>
   )

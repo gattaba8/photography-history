@@ -1,152 +1,94 @@
 'use client'
 
-import { useState } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
+import Image from 'next/image'
 import Navigation from '@/components/Navigation'
 import { eras, timelineEvents } from '@/data/timeline'
 
 export default function TimelinePage() {
-  const [showFilters, setShowFilters] = useState(false)
-  const [activeFilter, setActiveFilter] = useState<string | null>(null)
-
-  const categories = [
-    { key: 'invention', label: 'Inventions' },
-    { key: 'technique', label: 'Techniques' },
-    { key: 'camera', label: 'Appareils' },
-    { key: 'movement', label: 'Mouvements' },
-    { key: 'digital', label: 'Numérique' },
-    { key: 'milestone', label: 'Jalons' },
-  ]
-
-  const filtered = activeFilter
-    ? timelineEvents.filter((e) => e.category === activeFilter)
-    : timelineEvents
-
-  let globalIndex = 0
+  // Group events by era
+  const eventsByEra = eras.map((era) => ({
+    era,
+    events: timelineEvents
+      .filter((event) => event.era === era.id)
+      .sort((a, b) => a.year - b.year),
+  }))
 
   return (
     <main className="min-h-screen bg-white">
-      <Navigation />
+      <Navigation currentView="timeline" />
 
-      <div className="pt-14">
-        <div className="max-w-[1400px] mx-auto px-6 pt-10 pb-6 flex items-center justify-between">
-          <h1 className="text-[15px] font-medium">Chronologie</h1>
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-            className="text-[13px] text-[#999] hover:text-[#1a1a1a] transition-colors"
-          >
-            {showFilters ? 'Masquer les filtres' : 'Afficher les filtres'}
-          </button>
-        </div>
+      {/* Scrollbar-hiding styles */}
+      <style jsx global>{`
+        .timeline-scroll::-webkit-scrollbar {
+          display: none;
+        }
+        .timeline-scroll {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
 
-        {showFilters && (
-          <div className="max-w-[1400px] mx-auto px-6 pb-6 flex flex-wrap gap-2">
-            <button
-              onClick={() => setActiveFilter(null)}
-              className={`px-3 py-1.5 text-[12px] border transition-colors ${
-                !activeFilter
-                  ? 'bg-[#1a1a1a] text-white border-[#1a1a1a]'
-                  : 'bg-white text-[#666] border-[#e5e5e5] hover:border-[#999]'
-              }`}
-            >
-              Tous
-            </button>
-            {categories.map((cat) => (
-              <button
-                key={cat.key}
-                onClick={() => setActiveFilter(cat.key)}
-                className={`px-3 py-1.5 text-[12px] border transition-colors ${
-                  activeFilter === cat.key
-                    ? 'bg-[#1a1a1a] text-white border-[#1a1a1a]'
-                    : 'bg-white text-[#666] border-[#e5e5e5] hover:border-[#999]'
-                }`}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
-        )}
-
-        <div className="border-t border-[#e5e5e5]" />
-
-        <div className="max-w-[1400px] mx-auto px-6">
-          {eras.map((era) => {
-            const eraEvents = filtered.filter((e) => e.era === era.name)
-            if (eraEvents.length === 0) return null
+      <div className="pt-[100px] pb-12 px-6">
+        {/* Horizontal scrolling container */}
+        <div className="timeline-scroll flex overflow-x-auto" style={{ scrollBehavior: 'smooth' }}>
+          {eventsByEra.map(({ era, events }, eraIndex) => {
+            // Calculate column width based on number of items
+            // At ~90px per item with ~16px gap, up to 3 items per row
+            const itemsPerRow = 3
+            const cols = Math.min(events.length, itemsPerRow)
+            const minWidth = Math.max(280, cols * (90 + 16) + 60)
 
             return (
-              <section key={era.id} id={era.id}>
-                <div className="pt-16 pb-8">
-                  <h2 className="text-[32px] md:text-[48px] font-[family-name:var(--font-heading)] font-normal tracking-tight">
-                    {era.startYear}
-                    {era.endYear !== era.startYear && `–${era.endYear}`}
-                  </h2>
-                  <p className="text-[13px] text-[#999] mt-1">{era.name}</p>
-                </div>
+              <div
+                key={era.id}
+                className="flex-shrink-0"
+                style={{
+                  minWidth: `${minWidth}px`,
+                  borderLeft: eraIndex > 0 ? '1px solid #e5e5e5' : 'none',
+                }}
+              >
+                <div className="px-6 pt-2 pb-8">
+                  {/* Year header */}
+                  <div className="mb-8">
+                    <h2
+                      className="font-[family-name:var(--font-heading)] text-[42px] font-bold text-[#1a1a1a] leading-none tabular-nums"
+                    >
+                      {era.startYear}
+                    </h2>
+                    <p className="text-[11px] text-[#999] mt-1 tracking-wide">
+                      {era.name}
+                    </p>
+                  </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-5 gap-y-10 pb-16 border-b border-[#e5e5e5]">
-                  {eraEvents.map((event) => {
-                    globalIndex++
-                    const num = String(globalIndex).padStart(3, '0')
-                    return (
+                  {/* Items grid — flex-wrap for 2-3 items per row */}
+                  <div className="flex flex-wrap gap-4">
+                    {events.map((event) => (
                       <Link
                         key={event.id}
-                        href={`/article/${event.id}`}
-                        className="group"
+                        href={`/item/${event.id}`}
+                        className="block group"
                       >
-                        <div className="relative aspect-square overflow-hidden bg-[#f5f5f5] mb-3">
+                        <div className="relative w-[90px] h-[90px] overflow-hidden bg-[#f5f5f5]">
                           <Image
                             src={event.image}
                             alt={event.title}
                             fill
-                            className="object-cover group-hover:opacity-85 transition-opacity duration-300"
-                            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                            className="object-cover group-hover:opacity-75 transition-opacity duration-200"
+                            sizes="90px"
                           />
                         </div>
-                        <p className="text-[11px] text-[#bbb] tabular-nums mb-0.5">
-                          {num} — {event.year}
-                          {event.endYear ? `–${event.endYear}` : ''}
-                        </p>
-                        <p className="text-[13px] text-[#1a1a1a] leading-snug group-hover:text-[#666] transition-colors">
-                          {event.title}
-                        </p>
                       </Link>
-                    )
-                  })}
+                    ))}
+                  </div>
                 </div>
-              </section>
+              </div>
             )
           })}
-        </div>
 
-        <footer className="border-t border-[#e5e5e5] mt-0 py-8">
-          <div className="max-w-[1400px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-[12px] text-[#999]">
-              Musée de la Photographie — 1826 à aujourd&apos;hui
-            </p>
-            <div className="flex gap-6">
-              <Link
-                href="/"
-                className="text-[12px] text-[#999] hover:text-[#1a1a1a]"
-              >
-                Introduction
-              </Link>
-              <Link
-                href="/articles"
-                className="text-[12px] text-[#999] hover:text-[#1a1a1a]"
-              >
-                Collection
-              </Link>
-              <Link
-                href="/about"
-                className="text-[12px] text-[#999] hover:text-[#1a1a1a]"
-              >
-                À Propos
-              </Link>
-            </div>
-          </div>
-        </footer>
+          {/* Trailing whitespace */}
+          <div className="flex-shrink-0 w-24" />
+        </div>
       </div>
     </main>
   )

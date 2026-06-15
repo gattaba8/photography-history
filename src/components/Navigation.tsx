@@ -1,63 +1,115 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import Link from 'next/link'
-import { Menu, X } from 'lucide-react'
+import Link from 'next/link';
 
-export default function Navigation() {
-  const [isOpen, setIsOpen] = useState(false)
+type ViewTab = 'collection' | 'index' | 'timeline';
 
-  const links = [
-    { href: '/', label: 'Introduction' },
-    { href: '/timeline', label: 'Chronologie' },
-    { href: '/articles', label: 'Collection' },
-    { href: '/about', label: 'À Propos' },
-  ]
+interface NavigationProps {
+  currentView?: ViewTab | null;
+}
+
+function TabIndicator({ active }: { active: boolean }) {
+  if (active) {
+    return (
+      <span
+        className="inline-block w-[10px] h-[10px] bg-[#ff6600] mr-1.5"
+        aria-hidden="true"
+      />
+    );
+  }
+  return (
+    <span
+      className="inline-block w-[10px] h-[10px] border border-[#999] mr-1.5"
+      aria-hidden="true"
+    />
+  );
+}
+
+export default function Navigation({ currentView = null }: NavigationProps) {
+  const showTabs = currentView !== null;
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b border-[#e5e5e5]">
-      <div className="max-w-[1400px] mx-auto px-6 h-14 flex items-center justify-between">
-        <Link href="/" className="text-sm font-medium tracking-tight">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white">
+      {/* Primary nav bar */}
+      <nav className="h-[60px] flex items-center justify-between px-6 border-b border-[#e5e5e5]">
+        {/* Left: site name */}
+        <Link
+          href="/"
+          className="text-[13px] font-medium tracking-[0.15em] uppercase text-[#1a1a1a]"
+        >
           Musée de la Photographie
         </Link>
 
-        <div className="hidden md:flex items-center gap-8">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-[13px] text-[#666] hover:text-[#1a1a1a] transition-colors"
-            >
-              {link.label}
-            </Link>
-          ))}
+        {/* Right: text links separated by pipes */}
+        <div className="flex items-center gap-0 text-[13px] text-[#666]">
+          <Link
+            href="/"
+            className="hover:text-[#1a1a1a] transition-colors"
+          >
+            Introduction
+          </Link>
+          <span className="mx-3 text-[#ccc] select-none">|</span>
+          <Link
+            href="/collection"
+            className="hover:text-[#1a1a1a] transition-colors"
+          >
+            Collection
+          </Link>
+          <span className="mx-3 text-[#ccc] select-none">|</span>
+          <Link
+            href="/about"
+            className="hover:text-[#1a1a1a] transition-colors"
+          >
+            À Propos
+          </Link>
         </div>
+      </nav>
 
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden text-[#666]"
-          aria-label="Menu"
-        >
-          {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
-      </div>
+      {/* Secondary tab bar — only visible when currentView is set */}
+      {showTabs && (
+        <div className="h-[40px] flex items-center px-6 border-b border-[#e5e5e5] bg-white">
+          <div className="flex items-center gap-6 text-[12px]">
+            {/* Collection tab */}
+            <Link
+              href="/collection"
+              className={`flex items-center transition-colors ${
+                currentView === 'collection'
+                  ? 'text-[#ff6600]'
+                  : 'text-[#999] hover:text-[#666]'
+              }`}
+            >
+              <TabIndicator active={currentView === 'collection'} />
+              Collection
+            </Link>
 
-      {isOpen && (
-        <div className="md:hidden bg-white border-b border-[#e5e5e5]">
-          <div className="px-6 py-4 flex flex-col gap-3">
-            {links.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setIsOpen(false)}
-                className="text-sm text-[#666] hover:text-[#1a1a1a]"
-              >
-                {link.label}
-              </Link>
-            ))}
+            {/* Index tab */}
+            <Link
+              href="/collection?view=index"
+              className={`flex items-center transition-colors ${
+                currentView === 'index'
+                  ? 'text-[#ff6600]'
+                  : 'text-[#999] hover:text-[#666]'
+              }`}
+            >
+              <TabIndicator active={currentView === 'index'} />
+              Index
+            </Link>
+
+            {/* Timeline / Chronologie tab */}
+            <Link
+              href="/timeline"
+              className={`flex items-center transition-colors ${
+                currentView === 'timeline'
+                  ? 'text-[#ff6600]'
+                  : 'text-[#999] hover:text-[#666]'
+              }`}
+            >
+              <TabIndicator active={currentView === 'timeline'} />
+              Chronologie
+            </Link>
           </div>
         </div>
       )}
-    </nav>
-  )
+    </header>
+  );
 }
