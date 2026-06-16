@@ -29,37 +29,37 @@ export default function TimelinePage() {
       overlay.innerHTML = ''
       overlay.style.pointerEvents = 'auto'
 
-      // Shutter container
-      const shutter = document.createElement('div')
-      shutter.style.cssText = 'position:fixed;inset:0;z-index:9999;overflow:hidden;'
-      overlay.appendChild(shutter)
+      const container = document.createElement('div')
+      container.style.cssText = 'position:fixed;inset:0;z-index:9999;pointer-events:none;'
+      overlay.appendChild(container)
 
-      // 6 blades closing like a camera iris
-      const bladeCount = 6
-      for (let i = 0; i < bladeCount; i++) {
-        const blade = document.createElement('div')
-        const angle = (360 / bladeCount) * i
-        blade.style.cssText = `
-          position:absolute;
-          left:50%; top:50%;
-          width:200vmax; height:200vmax;
-          background:#1a1a1a;
-          transform-origin: center center;
-          transform: translate(-50%,-50%) rotate(${angle}deg) translateY(-100%);
-          transition: transform 0.5s cubic-bezier(0.7, 0, 0.3, 1);
-        `
-        shutter.appendChild(blade)
+      const top = document.createElement('div')
+      top.style.cssText = `
+        position:absolute; left:0; right:0; top:0; height:50%;
+        background:#1a1a1a;
+        transform: translateY(-100%);
+        transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+      `
+      const bottom = document.createElement('div')
+      bottom.style.cssText = `
+        position:absolute; left:0; right:0; bottom:0; height:50%;
+        background:#1a1a1a;
+        transform: translateY(100%);
+        transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+      `
+      container.appendChild(top)
+      container.appendChild(bottom)
 
+      requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            blade.style.transform = `translate(-50%,-50%) rotate(${angle}deg) translateY(-35%)`
-          })
+          top.style.transform = 'translateY(0)'
+          bottom.style.transform = 'translateY(0)'
         })
-      }
+      })
 
       setTimeout(() => {
         router.push(`/item/${eventId}`)
-      }, 500)
+      }, 450)
     },
     [router]
   )

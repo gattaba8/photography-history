@@ -33,51 +33,40 @@ export function FadeIn({
 }
 
 export function ShutterReveal({ children }: { children: ReactNode }) {
-  const [phase, setPhase] = useState<'closed' | 'opening' | 'done'>('closed')
+  const [open, setOpen] = useState(false)
+  const [done, setDone] = useState(false)
 
   useEffect(() => {
-    requestAnimationFrame(() => setPhase('opening'))
-    const t = setTimeout(() => setPhase('done'), 700)
+    requestAnimationFrame(() => setOpen(true))
+    const t = setTimeout(() => setDone(true), 600)
     return () => clearTimeout(t)
   }, [])
-
-  if (phase === 'done') return <>{children}</>
 
   return (
     <>
       {children}
-      <div
-        style={{
-          position: 'fixed',
-          inset: 0,
-          zIndex: 9999,
-          pointerEvents: 'none',
-          overflow: 'hidden',
-        }}
-      >
-        {Array.from({ length: 6 }).map((_, i) => {
-          const angle = (360 / 6) * i
-          return (
-            <div
-              key={i}
-              style={{
-                position: 'absolute',
-                left: '50%',
-                top: '50%',
-                width: '200vmax',
-                height: '200vmax',
-                background: '#1a1a1a',
-                transformOrigin: 'center center',
-                transform:
-                  phase === 'closed'
-                    ? `translate(-50%,-50%) rotate(${angle}deg) translateY(-35%)`
-                    : `translate(-50%,-50%) rotate(${angle}deg) translateY(-100%)`,
-                transition: 'transform 0.55s cubic-bezier(0.4, 0, 0.2, 1)',
-              }}
-            />
-          )
-        })}
-      </div>
+      {!done && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 9999, pointerEvents: 'none' }}>
+          <div
+            style={{
+              position: 'absolute',
+              left: 0, right: 0, top: 0, height: '50%',
+              background: '#1a1a1a',
+              transform: open ? 'translateY(-100%)' : 'translateY(0)',
+              transition: 'transform 0.5s cubic-bezier(0.65, 0, 0.35, 1)',
+            }}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              left: 0, right: 0, bottom: 0, height: '50%',
+              background: '#1a1a1a',
+              transform: open ? 'translateY(100%)' : 'translateY(0)',
+              transition: 'transform 0.5s cubic-bezier(0.65, 0, 0.35, 1)',
+            }}
+          />
+        </div>
+      )}
     </>
   )
 }
