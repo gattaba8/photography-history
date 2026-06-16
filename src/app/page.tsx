@@ -12,7 +12,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-white">
-      <Navigation currentView={null} />
+      <Navigation />
 
       <div className="pt-14 flex flex-col items-center justify-center min-h-screen px-6">
         <div className="flex flex-col items-center max-w-[900px] w-full">

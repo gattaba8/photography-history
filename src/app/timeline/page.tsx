@@ -6,7 +6,6 @@ import Navigation from '@/components/Navigation'
 import { eras, timelineEvents } from '@/data/timeline'
 
 export default function TimelinePage() {
-  // Group events by era
   const eventsByEra = eras.map((era) => ({
     era,
     events: timelineEvents
@@ -16,25 +15,16 @@ export default function TimelinePage() {
 
   return (
     <main className="min-h-screen bg-white">
-      <Navigation currentView="timeline" />
+      <Navigation />
 
-      {/* Scrollbar-hiding styles */}
       <style jsx global>{`
-        .timeline-scroll::-webkit-scrollbar {
-          display: none;
-        }
-        .timeline-scroll {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
+        .timeline-scroll::-webkit-scrollbar { display: none; }
+        .timeline-scroll { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
 
-      <div className="pt-[100px] pb-12 px-6">
-        {/* Horizontal scrolling container */}
+      <div className="pt-[76px] pb-12 px-6">
         <div className="timeline-scroll flex overflow-x-auto" style={{ scrollBehavior: 'smooth' }}>
           {eventsByEra.map(({ era, events }, eraIndex) => {
-            // Calculate column width based on number of items
-            // At ~90px per item with ~16px gap, up to 3 items per row
             const itemsPerRow = 3
             const cols = Math.min(events.length, itemsPerRow)
             const minWidth = Math.max(280, cols * (90 + 16) + 60)
@@ -42,6 +32,7 @@ export default function TimelinePage() {
             return (
               <div
                 key={era.id}
+                id={era.id}
                 className="flex-shrink-0"
                 style={{
                   minWidth: `${minWidth}px`,
@@ -49,11 +40,8 @@ export default function TimelinePage() {
                 }}
               >
                 <div className="px-6 pt-2 pb-8">
-                  {/* Year header */}
                   <div className="mb-8">
-                    <h2
-                      className="font-[family-name:var(--font-heading)] text-[42px] font-bold text-[#1a1a1a] leading-none tabular-nums"
-                    >
+                    <h2 className="font-[family-name:var(--font-heading)] text-[42px] font-bold text-[#1a1a1a] leading-none tabular-nums">
                       {era.startYear}
                     </h2>
                     <p className="text-[11px] text-[#999] mt-1 tracking-wide">
@@ -61,7 +49,6 @@ export default function TimelinePage() {
                     </p>
                   </div>
 
-                  {/* Items grid — flex-wrap for 2-3 items per row */}
                   <div className="flex flex-wrap gap-4">
                     {events.map((event) => (
                       <Link
@@ -85,8 +72,6 @@ export default function TimelinePage() {
               </div>
             )
           })}
-
-          {/* Trailing whitespace */}
           <div className="flex-shrink-0 w-24" />
         </div>
       </div>

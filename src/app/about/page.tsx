@@ -5,7 +5,7 @@ import { eras } from '@/data/timeline'
 export default function AboutPage() {
   return (
     <main className="min-h-screen bg-white">
-      <Navigation currentView={null} />
+      <Navigation />
 
       <div className="pt-14">
         <div className="max-w-[700px] mx-auto px-6 py-16">
