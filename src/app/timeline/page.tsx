@@ -47,33 +47,40 @@ export default function TimelinePage() {
       `
       overlay.appendChild(backdrop)
 
-      // Flying image — starts at thumbnail position
+      // Flying image — starts at thumbnail position, persists until item page loads
       const flyer = document.createElement('div')
       flyer.style.cssText = `
-        position:fixed; z-index:99;
+        position:fixed; z-index:9999;
         left:${rect.left}px; top:${rect.top}px;
         width:${rect.width}px; height:${rect.height}px;
         background: url("${src}") center/cover no-repeat;
-        box-shadow: 0 0 0 rgba(0,0,0,0);
-        transition: all 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+        transition: left 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+                    top 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+                    width 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+                    height 0.55s cubic-bezier(0.22, 1, 0.36, 1);
       `
       overlay.appendChild(flyer)
 
-      // Compute target — item page image position (left column, below nav)
-      // On the item page: max-w-[1200px] centered, grid 2 cols, left col has p-6/p-10 + aspect-square
-      const pageWidth = window.innerWidth
-      const maxW = Math.min(1200, pageWidth - 48) // px-6 = 24px each side
-      const marginLeft = (pageWidth - maxW) / 2
-      const colWidth = maxW / 2
-      const padOuter = 24 // px-6
-      const padInner = pageWidth >= 768 ? 40 : 24 // md:p-10 : p-6
-      const navH = 60
-      const topBarH = 10 + 40 // py-10 top + back link ~40px height
-      const gap = pageWidth >= 768 ? 64 : 40
+      // Store flyer reference so the item page can dismiss it
+      window.__flyerCleanup = () => {
+        flyer.style.opacity = '0'
+        flyer.style.transition = 'opacity 0.15s ease'
+        setTimeout(() => { overlay.innerHTML = ''; overlay.style.pointerEvents = 'none' }, 200)
+      }
 
-      const targetLeft = marginLeft + padOuter + padInner
-      const targetTop = navH + topBarH + padInner + 20
-      const targetSize = colWidth - padInner * 2 - gap / 2
+      // Compute target — must match item page layout exactly:
+      // Layout: pt-[60px] nav, max-w-[1200px] mx-auto px-6 py-10,
+      //         mb-10 back link (~56px), then grid 2 cols gap-16
+      // Left col: no bg, aspect-square image flush to top
+      const pageWidth = window.innerWidth
+      const maxW = Math.min(1200, pageWidth - 48)
+      const marginLeft = (pageWidth - maxW) / 2
+      const gap = pageWidth >= 768 ? 64 : 40
+      const colWidth = (maxW - gap) / 2
+
+      const targetLeft = marginLeft + 24
+      const targetTop = 161 // measured from actual item page render
+      const targetSize = colWidth
 
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {

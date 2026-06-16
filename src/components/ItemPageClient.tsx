@@ -2,6 +2,12 @@
 
 import { useEffect, useState, type ReactNode } from 'react'
 
+declare global {
+  interface Window {
+    __flyerCleanup?: () => void
+  }
+}
+
 export function FadeIn({
   children,
   delay = 0,
@@ -42,18 +48,18 @@ export function ImageReveal({
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 100)
+    // Show image immediately — it sits behind the flyer overlay
+    setVisible(true)
+    // Dismiss the flying overlay once the real image is painted
+    const t = setTimeout(() => {
+      window.__flyerCleanup?.()
+      delete window.__flyerCleanup
+    }, 50)
     return () => clearTimeout(t)
   }, [])
 
   return (
-    <div
-      className={className}
-      style={{
-        opacity: visible ? 1 : 0,
-        transition: 'opacity 0.4s ease',
-      }}
-    >
+    <div className={className} style={{ opacity: visible ? 1 : 0 }}>
       {children}
     </div>
   )

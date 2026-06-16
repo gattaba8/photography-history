@@ -69,8 +69,8 @@ export default async function ItemPage({
             </div>
           </FadeIn>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
-            <ImageReveal className="bg-[#f5f5f5] p-6 md:p-10 flex items-start justify-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-start">
+            <ImageReveal className="md:sticky md:top-[80px]">
               <div className="relative w-full aspect-square">
                 <Image
                   src={event.image}
