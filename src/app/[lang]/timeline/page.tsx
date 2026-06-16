@@ -1,14 +1,24 @@
 'use client'
 
 import { useRef, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import Image from 'next/image'
 import Navigation from '@/components/Navigation'
-import { eras, timelineEvents } from '@/data/timeline'
+import { getEras, getTimelineEvents } from '@/data/index'
+import type { Locale } from '@/i18n/config'
 
 export default function TimelinePage() {
   const router = useRouter()
+  const params = useParams()
+  const lang = (params.lang as Locale) || 'en'
   const overlayRef = useRef<HTMLDivElement>(null)
+
+  const eras = getEras(lang)
+  const timelineEvents = getTimelineEvents(lang)
+
+  function localePath(path: string) {
+    return lang === 'fr' ? `/fr${path}` : path
+  }
 
   const eventsByEra = eras.map((era) => ({
     era,
@@ -21,7 +31,7 @@ export default function TimelinePage() {
     (e: React.MouseEvent<HTMLAnchorElement>, eventId: string) => {
       e.preventDefault()
       if (!overlayRef.current) {
-        router.push(`/item/${eventId}`)
+        router.push(localePath(`/item/${eventId}`))
         return
       }
 
@@ -34,19 +44,9 @@ export default function TimelinePage() {
       overlay.appendChild(container)
 
       const top = document.createElement('div')
-      top.style.cssText = `
-        position:absolute; left:0; right:0; top:0; height:50%;
-        background:#1a1a1a;
-        transform: translateY(-100%);
-        transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
-      `
+      top.style.cssText = `position:absolute;left:0;right:0;top:0;height:50%;background:#1a1a1a;transform:translateY(-100%);transition:transform 0.45s cubic-bezier(0.65,0,0.35,1);`
       const bottom = document.createElement('div')
-      bottom.style.cssText = `
-        position:absolute; left:0; right:0; bottom:0; height:50%;
-        background:#1a1a1a;
-        transform: translateY(100%);
-        transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
-      `
+      bottom.style.cssText = `position:absolute;left:0;right:0;bottom:0;height:50%;background:#1a1a1a;transform:translateY(100%);transition:transform 0.45s cubic-bezier(0.65,0,0.35,1);`
       container.appendChild(top)
       container.appendChild(bottom)
 
@@ -58,15 +58,15 @@ export default function TimelinePage() {
       })
 
       setTimeout(() => {
-        router.push(`/item/${eventId}`)
+        router.push(localePath(`/item/${eventId}`))
       }, 450)
     },
-    [router]
+    [router, lang]
   )
 
   return (
     <main className="min-h-screen bg-white">
-      <Navigation />
+      <Navigation lang={lang} />
 
       <style jsx global>{`
         .timeline-scroll::-webkit-scrollbar { display: none; }
@@ -106,7 +106,7 @@ export default function TimelinePage() {
                     {events.map((event) => (
                       <a
                         key={event.id}
-                        href={`/item/${event.id}`}
+                        href={localePath(`/item/${event.id}`)}
                         className="block group cursor-pointer"
                         onClick={(e) => handleItemClick(e, event.id)}
                       >
