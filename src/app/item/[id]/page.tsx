@@ -56,99 +56,87 @@ export default async function ItemPage({
       <Navigation />
 
       <div className="pt-[60px]">
-        <div className="max-w-[1200px] mx-auto px-6 py-10">
-          <div className="flex items-center justify-between mb-10">
-            <Link
-              href="/timeline"
-              className="text-[13px] text-[#999] hover:text-[#1a1a1a] transition-colors"
-            >
-              ← Retour à la chronologie
-            </Link>
-          </div>
+        {/* Hero image — full width banner */}
+        <div className="relative w-full h-[40vh] min-h-[300px] max-h-[500px] bg-[#f5f5f5]">
+          <Image
+            src={event.image}
+            alt={event.title}
+            fill
+            className="object-contain"
+            priority
+            sizes="100vw"
+          />
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
-            <div className="bg-[#f5f5f5] p-6 md:p-10 flex items-center justify-center">
-              <div className="relative w-full aspect-square">
-                <Image
-                  src={event.image}
-                  alt={event.title}
-                  fill
-                  className="object-contain"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  priority
-                />
-              </div>
+        <div className="max-w-[720px] mx-auto px-6 py-10">
+          {/* Back link */}
+          <Link
+            href="/timeline"
+            className="text-[13px] text-[#999] hover:text-[#1a1a1a] transition-colors"
+          >
+            ← Retour à la chronologie
+          </Link>
+
+          {/* Title */}
+          <h1
+            className="text-[32px] md:text-[40px] text-[#1a1a1a] mt-8 mb-6 leading-tight"
+            style={{ fontFamily: 'var(--font-heading)', fontWeight: 400 }}
+          >
+            {event.title}
+          </h1>
+
+          {/* Metadata */}
+          <div className="flex flex-wrap gap-x-8 gap-y-3 mb-8 text-[13px]">
+            <div>
+              <span className="text-[#999] uppercase tracking-[0.1em]">Année </span>
+              <span className="text-[#1a1a1a] tabular-nums">
+                {event.year}{event.endYear ? `–${event.endYear}` : ''}
+              </span>
             </div>
-
-            <div className="flex flex-col justify-start">
-              <h1
-                className="text-[28px] md:text-[32px] text-[#1a1a1a] mb-8 leading-tight"
-                style={{ fontFamily: 'var(--font-heading)', fontWeight: 400 }}
-              >
-                {event.title}
-              </h1>
-
-              <div className="space-y-4 mb-8">
-                <div>
-                  <p className="text-[11px] uppercase tracking-[0.15em] text-[#999] mb-0.5">
-                    Année
-                  </p>
-                  <p className="text-[15px] text-[#1a1a1a] tabular-nums">
-                    {event.year}
-                    {event.endYear ? `–${event.endYear}` : ''}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[11px] uppercase tracking-[0.15em] text-[#999] mb-0.5">
-                    Catégorie
-                  </p>
-                  <p className="text-[15px] text-[#1a1a1a]">
-                    {categoryLabels[event.category] || event.category}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[11px] uppercase tracking-[0.15em] text-[#999] mb-0.5">
-                    Époque
-                  </p>
-                  <p className="text-[15px] text-[#1a1a1a]">
-                    {era?.name ?? event.era}
-                  </p>
-                </div>
-              </div>
-
-              <p className="text-[15px] text-[#1a1a1a] leading-relaxed mb-6 font-medium">
-                {event.summary}
-              </p>
-
-              <hr className="border-[#e5e5e5] mb-6" />
-
-              <div className="space-y-5">
-                {contentParagraphs.map((p, i) => (
-                  <div key={i}>
-                    <p className="text-[14px] text-[#444] leading-[1.8]">{p}</p>
-                    {illustrations[i] && (
-                      <figure className="my-6">
-                        <div className="relative w-full aspect-[16/10] bg-[#f5f5f5] overflow-hidden">
-                          <Image
-                            src={illustrations[i].url}
-                            alt={illustrations[i].caption}
-                            fill
-                            className="object-contain"
-                            sizes="(max-width: 768px) 100vw, 50vw"
-                          />
-                        </div>
-                        <figcaption className="text-[11px] text-[#999] mt-2 italic">
-                          {illustrations[i].caption}
-                        </figcaption>
-                      </figure>
-                    )}
-                  </div>
-                ))}
-              </div>
+            <div>
+              <span className="text-[#999] uppercase tracking-[0.1em]">Catégorie </span>
+              <span className="text-[#1a1a1a]">{categoryLabels[event.category]}</span>
+            </div>
+            <div>
+              <span className="text-[#999] uppercase tracking-[0.1em]">Époque </span>
+              <span className="text-[#1a1a1a]">{era?.name ?? event.era}</span>
             </div>
           </div>
 
-          <div className="mt-16 pt-8 border-t border-[#e5e5e5] flex items-center justify-between">
+          {/* Summary */}
+          <p className="text-[16px] text-[#1a1a1a] leading-relaxed mb-8 font-medium">
+            {event.summary}
+          </p>
+
+          <hr className="border-[#e5e5e5] mb-8" />
+
+          {/* Article content with inline illustrations */}
+          <div className="space-y-6">
+            {contentParagraphs.map((p, i) => (
+              <div key={i}>
+                <p className="text-[15px] text-[#444] leading-[1.85]">{p}</p>
+                {illustrations[i] && (
+                  <figure className="my-8">
+                    <div className="relative w-full aspect-[16/10] bg-[#f5f5f5] overflow-hidden">
+                      <Image
+                        src={illustrations[i].url}
+                        alt={illustrations[i].caption}
+                        fill
+                        className="object-contain"
+                        sizes="720px"
+                      />
+                    </div>
+                    <figcaption className="text-[11px] text-[#999] mt-2 italic">
+                      {illustrations[i].caption}
+                    </figcaption>
+                  </figure>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Prev / Next */}
+          <div className="mt-16 pt-8 border-t border-[#e5e5e5] flex items-start justify-between gap-6">
             {prevEvent ? (
               <Link
                 href={`/item/${prevEvent.id}`}
