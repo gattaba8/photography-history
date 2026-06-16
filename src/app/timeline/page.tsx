@@ -20,82 +20,46 @@ export default function TimelinePage() {
   const handleItemClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>, eventId: string) => {
       e.preventDefault()
-
-      const thumb = e.currentTarget.querySelector('img') as HTMLImageElement | null
-      if (!thumb || !overlayRef.current) {
+      if (!overlayRef.current) {
         router.push(`/item/${eventId}`)
         return
       }
 
-      const rect = thumb.getBoundingClientRect()
-      const src = thumb.src
       const overlay = overlayRef.current
-
-      // Hide the original thumbnail
-      thumb.style.opacity = '0'
-
-      // Create elements
       overlay.innerHTML = ''
       overlay.style.pointerEvents = 'auto'
 
-      // Backdrop — starts transparent
-      const backdrop = document.createElement('div')
-      backdrop.style.cssText = `
-        position:fixed; inset:0; z-index:98;
-        background:white; opacity:0;
-        transition: opacity 0.45s ease;
-      `
-      overlay.appendChild(backdrop)
+      // Shutter container
+      const shutter = document.createElement('div')
+      shutter.style.cssText = 'position:fixed;inset:0;z-index:9999;overflow:hidden;'
+      overlay.appendChild(shutter)
 
-      // Flying image — starts at thumbnail position, persists until item page loads
-      const flyer = document.createElement('div')
-      flyer.style.cssText = `
-        position:fixed; z-index:9999;
-        left:${rect.left}px; top:${rect.top}px;
-        width:${rect.width}px; height:${rect.height}px;
-        background: url("${src}") center/cover no-repeat;
-        transition: left 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-                    top 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-                    width 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-                    height 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-      `
-      overlay.appendChild(flyer)
+      // 6 blades closing like a camera iris
+      const bladeCount = 6
+      for (let i = 0; i < bladeCount; i++) {
+        const blade = document.createElement('div')
+        const angle = (360 / bladeCount) * i
+        blade.style.cssText = `
+          position:absolute;
+          left:50%; top:50%;
+          width:200vmax; height:200vmax;
+          background:#1a1a1a;
+          transform-origin: center center;
+          transform: translate(-50%,-50%) rotate(${angle}deg) translateY(-100%);
+          transition: transform 0.5s cubic-bezier(0.7, 0, 0.3, 1);
+        `
+        shutter.appendChild(blade)
 
-      // Store flyer reference so the item page can dismiss it
-      window.__flyerCleanup = () => {
-        flyer.style.opacity = '0'
-        flyer.style.transition = 'opacity 0.15s ease'
-        setTimeout(() => { overlay.innerHTML = ''; overlay.style.pointerEvents = 'none' }, 200)
-      }
-
-      // Compute target — must match item page layout exactly:
-      // Layout: pt-[60px] nav, max-w-[1200px] mx-auto px-6 py-10,
-      //         mb-10 back link (~56px), then grid 2 cols gap-16
-      // Left col: no bg, aspect-square image flush to top
-      const pageWidth = window.innerWidth
-      const maxW = Math.min(1200, pageWidth - 48)
-      const marginLeft = (pageWidth - maxW) / 2
-      const gap = pageWidth >= 768 ? 64 : 40
-      const colWidth = (maxW - gap) / 2
-
-      const targetLeft = marginLeft + 24
-      const targetTop = 161 // measured from actual item page render
-      const targetSize = colWidth
-
-      requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          backdrop.style.opacity = '0.85'
-          flyer.style.left = `${targetLeft}px`
-          flyer.style.top = `${targetTop}px`
-          flyer.style.width = `${targetSize}px`
-          flyer.style.height = `${targetSize}px`
-          flyer.style.boxShadow = '0 25px 60px rgba(0,0,0,0.15)'
+          requestAnimationFrame(() => {
+            blade.style.transform = `translate(-50%,-50%) rotate(${angle}deg) translateY(-35%)`
+          })
         })
-      })
+      }
 
       setTimeout(() => {
         router.push(`/item/${eventId}`)
-      }, 550)
+      }, 500)
     },
     [router]
   )

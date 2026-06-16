@@ -2,12 +2,6 @@
 
 import { useEffect, useState, type ReactNode } from 'react'
 
-declare global {
-  interface Window {
-    __flyerCleanup?: () => void
-  }
-}
-
 export function FadeIn({
   children,
   delay = 0,
@@ -38,29 +32,52 @@ export function FadeIn({
   )
 }
 
-export function ImageReveal({
-  children,
-  className = '',
-}: {
-  children: ReactNode
-  className?: string
-}) {
-  const [visible, setVisible] = useState(false)
+export function ShutterReveal({ children }: { children: ReactNode }) {
+  const [phase, setPhase] = useState<'closed' | 'opening' | 'done'>('closed')
 
   useEffect(() => {
-    // Show image immediately — it sits behind the flyer overlay
-    setVisible(true)
-    // Dismiss the flying overlay once the real image is painted
-    const t = setTimeout(() => {
-      window.__flyerCleanup?.()
-      delete window.__flyerCleanup
-    }, 50)
+    requestAnimationFrame(() => setPhase('opening'))
+    const t = setTimeout(() => setPhase('done'), 700)
     return () => clearTimeout(t)
   }, [])
 
+  if (phase === 'done') return <>{children}</>
+
   return (
-    <div className={className} style={{ opacity: visible ? 1 : 0 }}>
+    <>
       {children}
-    </div>
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 9999,
+          pointerEvents: 'none',
+          overflow: 'hidden',
+        }}
+      >
+        {Array.from({ length: 6 }).map((_, i) => {
+          const angle = (360 / 6) * i
+          return (
+            <div
+              key={i}
+              style={{
+                position: 'absolute',
+                left: '50%',
+                top: '50%',
+                width: '200vmax',
+                height: '200vmax',
+                background: '#1a1a1a',
+                transformOrigin: 'center center',
+                transform:
+                  phase === 'closed'
+                    ? `translate(-50%,-50%) rotate(${angle}deg) translateY(-35%)`
+                    : `translate(-50%,-50%) rotate(${angle}deg) translateY(-100%)`,
+                transition: 'transform 0.55s cubic-bezier(0.4, 0, 0.2, 1)',
+              }}
+            />
+          )
+        })}
+      </div>
+    </>
   )
 }

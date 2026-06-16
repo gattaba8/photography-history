@@ -2,7 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import Navigation from '@/components/Navigation'
-import { FadeIn, ImageReveal } from '@/components/ItemPageClient'
+import { FadeIn, ShutterReveal } from '@/components/ItemPageClient'
 import { timelineEvents, eras } from '@/data/timeline'
 
 export function generateStaticParams() {
@@ -54,6 +54,7 @@ export default async function ItemPage({
 
   return (
     <main className="min-h-screen bg-white">
+      <ShutterReveal>
       <Navigation />
 
       <div className="pt-[60px]">
@@ -70,7 +71,7 @@ export default async function ItemPage({
           </FadeIn>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-start">
-            <ImageReveal className="md:sticky md:top-[80px]">
+            <div className="md:sticky md:top-[80px]">
               <div className="relative w-full aspect-square">
                 <Image
                   src={event.image}
@@ -81,7 +82,7 @@ export default async function ItemPage({
                   priority
                 />
               </div>
-            </ImageReveal>
+            </div>
 
             <div className="flex flex-col justify-start">
               <FadeIn delay={250}>
@@ -193,6 +194,7 @@ export default async function ItemPage({
           </FadeIn>
         </div>
       </div>
+      </ShutterReveal>
     </main>
   )
 }
