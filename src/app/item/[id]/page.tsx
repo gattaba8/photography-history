@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import Navigation from '@/components/Navigation'
+import { FadeIn, ImageReveal } from '@/components/ItemPageClient'
 import { timelineEvents, eras } from '@/data/timeline'
 
 export function generateStaticParams() {
@@ -57,18 +58,19 @@ export default async function ItemPage({
 
       <div className="pt-[60px]">
         <div className="max-w-[1200px] mx-auto px-6 py-10">
-          <div className="flex items-center justify-between mb-10">
-            <Link
-              href="/timeline"
-              className="text-[13px] text-[#999] hover:text-[#1a1a1a] transition-colors"
-            >
-              ← Retour à la chronologie
-            </Link>
-          </div>
+          <FadeIn delay={200}>
+            <div className="flex items-center justify-between mb-10">
+              <Link
+                href="/timeline"
+                className="text-[13px] text-[#999] hover:text-[#1a1a1a] transition-colors"
+              >
+                ← Retour à la chronologie
+              </Link>
+            </div>
+          </FadeIn>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
-            {/* Left: Image — aligned to top */}
-            <div className="bg-[#f5f5f5] p-6 md:p-10 flex items-start justify-center">
+            <ImageReveal className="bg-[#f5f5f5] p-6 md:p-10 flex items-start justify-center">
               <div className="relative w-full aspect-square">
                 <Image
                   src={event.image}
@@ -79,54 +81,59 @@ export default async function ItemPage({
                   priority
                 />
               </div>
-            </div>
+            </ImageReveal>
 
-            {/* Right: Details */}
             <div className="flex flex-col justify-start">
-              <h1
-                className="text-[28px] md:text-[32px] text-[#1a1a1a] mb-8 leading-tight"
-                style={{ fontFamily: 'var(--font-heading)', fontWeight: 400 }}
-              >
-                {event.title}
-              </h1>
+              <FadeIn delay={250}>
+                <h1
+                  className="text-[28px] md:text-[32px] text-[#1a1a1a] mb-8 leading-tight"
+                  style={{ fontFamily: 'var(--font-heading)', fontWeight: 400 }}
+                >
+                  {event.title}
+                </h1>
+              </FadeIn>
 
-              <div className="space-y-4 mb-8">
-                <div>
-                  <p className="text-[11px] uppercase tracking-[0.15em] text-[#999] mb-0.5">
-                    Année
-                  </p>
-                  <p className="text-[15px] text-[#1a1a1a] tabular-nums">
-                    {event.year}
-                    {event.endYear ? `–${event.endYear}` : ''}
-                  </p>
+              <FadeIn delay={350}>
+                <div className="space-y-4 mb-8">
+                  <div>
+                    <p className="text-[11px] uppercase tracking-[0.15em] text-[#999] mb-0.5">
+                      Année
+                    </p>
+                    <p className="text-[15px] text-[#1a1a1a] tabular-nums">
+                      {event.year}
+                      {event.endYear ? `–${event.endYear}` : ''}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-[11px] uppercase tracking-[0.15em] text-[#999] mb-0.5">
+                      Catégorie
+                    </p>
+                    <p className="text-[15px] text-[#1a1a1a]">
+                      {categoryLabels[event.category] || event.category}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-[11px] uppercase tracking-[0.15em] text-[#999] mb-0.5">
+                      Époque
+                    </p>
+                    <p className="text-[15px] text-[#1a1a1a]">
+                      {era?.name ?? event.era}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-[11px] uppercase tracking-[0.15em] text-[#999] mb-0.5">
-                    Catégorie
-                  </p>
-                  <p className="text-[15px] text-[#1a1a1a]">
-                    {categoryLabels[event.category] || event.category}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[11px] uppercase tracking-[0.15em] text-[#999] mb-0.5">
-                    Époque
-                  </p>
-                  <p className="text-[15px] text-[#1a1a1a]">
-                    {era?.name ?? event.era}
-                  </p>
-                </div>
-              </div>
+              </FadeIn>
 
-              <p className="text-[15px] text-[#1a1a1a] leading-relaxed mb-6 font-medium">
-                {event.summary}
-              </p>
+              <FadeIn delay={450}>
+                <p className="text-[15px] text-[#1a1a1a] leading-relaxed mb-6 font-medium">
+                  {event.summary}
+                </p>
 
-              <hr className="border-[#e5e5e5] mb-6" />
+                <hr className="border-[#e5e5e5] mb-6" />
+              </FadeIn>
 
               <div className="space-y-5">
                 {contentParagraphs.map((p, i) => (
-                  <div key={i}>
+                  <FadeIn key={i} delay={550 + i * 80}>
                     <p className="text-[14px] text-[#444] leading-[1.8]">{p}</p>
                     {illustrations[i] && (
                       <figure className="my-6">
@@ -144,44 +151,46 @@ export default async function ItemPage({
                         </figcaption>
                       </figure>
                     )}
-                  </div>
+                  </FadeIn>
                 ))}
               </div>
             </div>
           </div>
 
-          <div className="mt-16 pt-8 border-t border-[#e5e5e5] flex items-center justify-between">
-            {prevEvent ? (
-              <Link
-                href={`/item/${prevEvent.id}`}
-                className="group flex flex-col items-start max-w-[45%]"
-              >
-                <span className="text-[11px] uppercase tracking-[0.15em] text-[#999] mb-1">
-                  Précédent
-                </span>
-                <span className="text-[14px] text-[#666] group-hover:text-[#1a1a1a] transition-colors leading-snug">
-                  {prevEvent.title}
-                </span>
-              </Link>
-            ) : (
-              <div />
-            )}
-            {nextEvent ? (
-              <Link
-                href={`/item/${nextEvent.id}`}
-                className="group flex flex-col items-end max-w-[45%] text-right"
-              >
-                <span className="text-[11px] uppercase tracking-[0.15em] text-[#999] mb-1">
-                  Suivant
-                </span>
-                <span className="text-[14px] text-[#666] group-hover:text-[#1a1a1a] transition-colors leading-snug">
-                  {nextEvent.title}
-                </span>
-              </Link>
-            ) : (
-              <div />
-            )}
-          </div>
+          <FadeIn delay={800}>
+            <div className="mt-16 pt-8 border-t border-[#e5e5e5] flex items-center justify-between">
+              {prevEvent ? (
+                <Link
+                  href={`/item/${prevEvent.id}`}
+                  className="group flex flex-col items-start max-w-[45%]"
+                >
+                  <span className="text-[11px] uppercase tracking-[0.15em] text-[#999] mb-1">
+                    Précédent
+                  </span>
+                  <span className="text-[14px] text-[#666] group-hover:text-[#1a1a1a] transition-colors leading-snug">
+                    {prevEvent.title}
+                  </span>
+                </Link>
+              ) : (
+                <div />
+              )}
+              {nextEvent ? (
+                <Link
+                  href={`/item/${nextEvent.id}`}
+                  className="group flex flex-col items-end max-w-[45%] text-right"
+                >
+                  <span className="text-[11px] uppercase tracking-[0.15em] text-[#999] mb-1">
+                    Suivant
+                  </span>
+                  <span className="text-[14px] text-[#666] group-hover:text-[#1a1a1a] transition-colors leading-snug">
+                    {nextEvent.title}
+                  </span>
+                </Link>
+              ) : (
+                <div />
+              )}
+            </div>
+          </FadeIn>
         </div>
       </div>
     </main>
