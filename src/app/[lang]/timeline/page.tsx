@@ -75,7 +75,7 @@ export default function TimelinePage() {
 
       <div ref={overlayRef} style={{ pointerEvents: 'none' }} />
 
-      <div className="pt-[76px] pb-12 px-6">
+      <div className="pt-[76px] pb-12">
         <div className="timeline-scroll flex overflow-x-auto" style={{ scrollBehavior: 'smooth' }}>
           {eventsByEra.map(({ era, events }, eraIndex) => {
             const itemsPerRow = 3
