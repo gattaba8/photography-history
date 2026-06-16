@@ -8,9 +8,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-white">
-      <Navigation />
-
-      <div className="pt-14 flex flex-col items-center justify-center min-h-screen px-6">
+      <div className="flex flex-col items-center justify-center min-h-screen px-6">
         <div className="flex flex-col items-center max-w-[900px] w-full">
           <h1
             className="text-center uppercase tracking-[0.25em] text-[#1a1a1a] mb-12"
